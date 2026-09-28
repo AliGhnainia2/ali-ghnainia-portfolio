@@ -1,3 +1,6 @@
+import { ArrowRight, ArrowUpRight } from "lucide-react";
+
 export function ArrowIcon({ diagonal = false }: { diagonal?: boolean }) {
-  return <span aria-hidden="true" className="arrow-icon">{diagonal ? "↗" : "→"}</span>;
+  const Icon = diagonal ? ArrowUpRight : ArrowRight;
+  return <Icon aria-hidden="true" className={`icon arrow-icon ${diagonal ? "arrow-icon--diagonal" : ""}`} />;
 }

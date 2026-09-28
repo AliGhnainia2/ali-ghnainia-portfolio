@@ -4,6 +4,7 @@ import { Header, Footer } from "@/components/locale-chrome";
 import { getContent, isLocale } from "@/content/i18n";
 import { profile } from "@/content/site";
 import { getSiteUrl } from "@/lib/site-url";
+import { fontVariables } from "../fonts";
 import "../globals.css";
 
 type Props = { children: React.ReactNode; params: Promise<{ locale: string }> };
@@ -34,5 +35,5 @@ export default async function LocaleLayout({ children, params }: Props) {
     sameAs: [profile.linkedin, profile.github],
     ...(siteUrl ? { url: `${siteUrl}/${locale}` } : {}),
   };
-  return <html lang={locale} data-scroll-behavior="smooth"><body id="top"><a className="skip-link" href="#main">{content.a11y.skip}</a><Header locale={locale} content={content} />{children}<Footer locale={locale} content={content} /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(person).replace(/</g, "\\u003c") }} /></body></html>;
+  return <html lang={locale} data-scroll-behavior="smooth" className={fontVariables}><body id="top" suppressHydrationWarning><a className="skip-link" href="#main">{content.a11y.skip}</a><Header locale={locale} content={content} />{children}<Footer locale={locale} content={content} /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(person).replace(/</g, "\\u003c") }} /></body></html>;
 }
