@@ -6,7 +6,7 @@ import type { Project } from "@/content/site";
 export const projectIcons: Record<Project["slug"], LucideIcon> = { saeiv: BusFront, statlink: ChartColumn, "technical-chat": MessagesSquare };
 
 // One icon per architecture stage, in the same order as `visuals.flows[slug].stages`.
-const stageIcons: Record<Project["slug"], LucideIcon[]> = {
+export const stageIcons: Record<Project["slug"], LucideIcon[]> = {
   saeiv: [Database, Cable, Workflow, Server, Monitor],
   statlink: [Database, Server, LayoutDashboard, FileText],
   "technical-chat": [Monitor, Server, Database],
@@ -14,7 +14,7 @@ const stageIcons: Record<Project["slug"], LucideIcon[]> = {
 
 export function SystemVisual({ content, compact = false }: { content: Dictionary; compact?: boolean }) {
   const copy = content.visuals;
-  return <div className={`system-visual ${compact ? "system-visual--compact" : ""}`} aria-label={copy.systemLabel} role="img">
+  return <div className={`system-visual ${compact ? "system-visual--compact" : ""}`} aria-label={copy.systemLabel} role="img" data-diagram>
     <div className="visual-topline"><span className="pulse-dot" /> {copy.systemTop}</div>
     <div className="system-grid">
       <div className="system-node system-node--source"><span className="node-id"><Database aria-hidden="true" className="icon" />{copy.sources}</span><strong>{copy.operational}</strong><small>PostgreSQL · CDC</small></div>
@@ -30,12 +30,12 @@ export function ProjectVisual({ slug, content, variant = "card" }: { slug: Proje
   const flow = content.visuals.flows[slug];
   const icons = stageIcons[slug];
   const labels = content.projectUi;
-  return <div className={`project-visual project-visual--${slug} project-visual--${variant}`} role="img" aria-label={`${labels.projectVisualLabel}: ${flow.stages.map(stage => stage.name).join(" → ")}`}>
+  return <div className={`project-visual project-visual--${slug} project-visual--${variant}`} data-diagram data-reveal={variant === "full" ? true : undefined} role="img" aria-label={`${labels.projectVisualLabel}: ${flow.stages.map(stage => stage.name).join(" → ")}`}>
     <div className="project-visual-top"><span className="pulse-dot" /><span>{labels.architecture} / {slug.toUpperCase()}</span></div>
     <ol className="flow" style={{ "--stages": flow.stages.length } as CSSProperties}>
       {flow.stages.map((stage, index) => {
         const Icon = icons[index];
-        return <li className="flow-node" key={stage.name}>
+        return <li className="flow-node" key={stage.name} style={{ "--flow-stage": index } as CSSProperties}>
           <span className="flow-icon"><Icon aria-hidden="true" className="icon" /></span>
           {variant === "full"
             ? <span className="flow-text"><span className="flow-role">{stage.role}</span><strong className="flow-name">{stage.name}</strong><span className="flow-detail">{stage.detail}</span></span>

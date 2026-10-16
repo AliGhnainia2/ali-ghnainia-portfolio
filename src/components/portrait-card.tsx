@@ -13,18 +13,12 @@ export function PortraitCard({ content }: { content: Dictionary }) {
       ? "/images/ali-profile.jpg"
       : null;
 
+  if (!photoPath) return null;
+
   return (
     <figure className="portrait-card">
-      <div className={`portrait-stage ${photoPath ? "portrait-stage--photo" : "portrait-stage--empty"}`}>
-        {photoPath ? (
-          <Image src={photoPath} alt={content.portrait.photoAlt} width={1122} height={1402} quality={100} sizes="(max-width: 560px) calc(100vw - 32px), (max-width: 800px) 42vw, (max-width: 1180px) 340px, 300px" unoptimized priority className="portrait-image" />
-        ) : (
-          <div className="portrait-placeholder" role="img" aria-label={content.portrait.placeholderAlt}>
-            <span className="portrait-placeholder-grid" aria-hidden="true" />
-            <span className="portrait-monogram" aria-hidden="true">AG<span>.</span></span>
-            <span className="portrait-placeholder-note">{content.portrait.placeholder}</span>
-          </div>
-        )}
+      <div className="portrait-stage portrait-stage--photo">
+        <Image src={photoPath} alt={content.portrait.photoAlt} width={1122} height={1402} quality={100} sizes="(max-width: 560px) min(calc(100vw - 52px), 350px), (max-width: 800px) 420px, (max-width: 1180px) 36vw, 400px" unoptimized priority className="portrait-image" />
         <span className="portrait-corners" aria-hidden="true" />
       </div>
       <figcaption className="portrait-caption"><span><MapPin aria-hidden="true" className="icon" />{content.locationName}</span></figcaption>

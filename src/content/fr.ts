@@ -105,6 +105,26 @@ export const fr: Dictionary = {
       ] },
     },
   },
+  theme: {
+    toggle: "Changer de thème",
+    toLight: "Activer le mode clair",
+    toDark: "Activer le mode sombre",
+    light: "Clair",
+    dark: "Sombre"
+  },
+  engineering: {
+    eyebrow: "L’ARCHITECTURE EN PRATIQUE",
+    title: "Explorez le système.",
+    workbenchLabel: "Architecture interactive des projets sélectionnés",
+    projectTabs: "Choisir l’architecture d’un projet",
+    layerNavigation: "Explorer les couches d’architecture",
+    selectedLayer: "COUCHE SÉLECTIONNÉE",
+    diagramNote: "Flux de données illustré",
+    explore: "Explorer le projet",
+    pauseMotion: "Mettre les animations en pause",
+    resumeMotion: "Reprendre les animations",
+    reducedMotion: "Animations réduites activées"
+  },
   portrait: { placeholder: "PORTRAIT / À VENIR", placeholderAlt: "Emplacement du portrait ; photo professionnelle à venir", photoAlt: "Portrait d'Ali Ghnainia" },
   notFound: { eyebrow: "404 / PAGE INTROUVABLE", title: "Cette page est introuvable.", body: "Elle a peut-être été déplacée. Les projets sont toujours ici.", action: "Retour à l'accueil" },
   a11y: { skip: "Aller au contenu", switchTo: "Passer en", caseNav: "Sections de l'étude de cas", breadcrumbs: "Fil d'Ariane" },

@@ -1,6 +1,8 @@
+import { themeBootstrapScript } from "@/lib/theme";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Header, Footer } from "@/components/locale-chrome";
+import { SiteEffects } from "@/components/site-effects";
 import { getContent, isLocale } from "@/content/i18n";
 import { profile } from "@/content/site";
 import { getSiteUrl } from "@/lib/site-url";
@@ -35,5 +37,5 @@ export default async function LocaleLayout({ children, params }: Props) {
     sameAs: [profile.linkedin, profile.github],
     ...(siteUrl ? { url: `${siteUrl}/${locale}` } : {}),
   };
-  return <html lang={locale} data-scroll-behavior="smooth" className={fontVariables}><body id="top" suppressHydrationWarning><a className="skip-link" href="#main">{content.a11y.skip}</a><Header locale={locale} content={content} />{children}<Footer locale={locale} content={content} /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(person).replace(/</g, "\\u003c") }} /></body></html>;
+  return <html lang={locale} suppressHydrationWarning data-scroll-behavior="smooth" className={fontVariables}><head><script dangerouslySetInnerHTML={{ __html: themeBootstrapScript }} /></head><body id="top" suppressHydrationWarning><a className="skip-link" href="#main">{content.a11y.skip}</a><SiteEffects /><Header locale={locale} content={content} />{children}<Footer locale={locale} content={content} /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(person).replace(/</g, "\\u003c") }} /></body></html>;
 }

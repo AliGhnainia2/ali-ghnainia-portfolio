@@ -27,7 +27,7 @@ export function ProjectCasePage({ locale, content, project, next }: { locale: Lo
   return <main id="main" className={`project-page project-page--${project.slug}`}><div className="container">
     <nav className="breadcrumbs" aria-label={content.a11y.breadcrumbs}><Link href={`/${locale}`}>{content.nav.homeShort}</Link><span aria-hidden="true">/</span><Link href={`/${locale}/#projects`}>{content.nav.projects}</Link><span aria-hidden="true">/</span><span aria-current="page">{project.shortTitle}</span></nav>
 
-    <section className="project-hero">
+    <section className="project-hero" data-reveal>
       <div>
         <p className="eyebrow"><span className="project-hero-icon"><ProjectIcon aria-hidden="true" className="icon" /></span>{ui.caseStudy} {project.number} / {project.category.toUpperCase()}</p>
         <h1><span className="project-title-main">{titleMain}</span>{titleSub && <><span className="sr-only"> — </span><span className="project-title-sub">{titleSub}</span></>}</h1>
@@ -42,9 +42,9 @@ export function ProjectCasePage({ locale, content, project, next }: { locale: Lo
     </section>
 
     <ProjectVisual slug={project.slug} content={content} variant="full" />
-    {project.facts.length > 0 && <dl className="project-facts">{project.facts.map(fact => <div key={fact.value}><dt>{fact.label}</dt><dd>{fact.value}</dd></div>)}</dl>}
+    {project.facts.length > 0 && <dl className="project-facts" data-reveal>{project.facts.map(fact => <div key={fact.value}><dt>{fact.label}</dt><dd>{fact.value}</dd></div>)}</dl>}
 
-    {project.slug === "saeiv" && <section className="orchestration" aria-labelledby="orchestration-title">
+    {project.slug === "saeiv" && <section className="orchestration" data-reveal aria-labelledby="orchestration-title">
       <div className="orchestration-head">
         <h2 id="orchestration-title" className="orchestration-label"><span className="pulse-dot" />{ui.focus}</h2>
         {connectors && <p className="orchestration-count"><strong>{connectors.value}</strong><span>{connectors.label}</span></p>}
@@ -52,26 +52,26 @@ export function ProjectCasePage({ locale, content, project, next }: { locale: Lo
       <ol className="orchestration-steps">{ui.focusItems.map((item, index) => { const Icon = orchestrationIcons[index]; return <li key={item}><span className="orchestration-step-icon"><Icon aria-hidden="true" className="icon" /></span><span className="orchestration-step-number">{pad(index + 1)}</span><strong>{item}</strong></li>; })}</ol>
     </section>}
 
-    {project.slug === "statlink" && <nav className="case-area-grid" aria-label={ui.exploreAreas}><p>{ui.exploreAreas}</p>{[3, 4, 5].map((index, position) => { const Icon = areaIcons[position]; return <a key={index} href={`#section-${index}`}><span className="case-area-head"><span className="case-area-icon"><Icon aria-hidden="true" className="icon" /></span><span className="case-area-number">{pad(index + 1)}</span></span><strong>{project.sections[index].heading}</strong><span className="case-area-jump">{ui.jumpTo}<ArrowDown aria-hidden="true" className="icon" /></span></a>; })}</nav>}
+    {project.slug === "statlink" && <nav className="case-area-grid" data-reveal aria-label={ui.exploreAreas}><p>{ui.exploreAreas}</p>{[3, 4, 5].map((index, position) => { const Icon = areaIcons[position]; return <a key={index} href={`#section-${index}`}><span className="case-area-head"><span className="case-area-icon"><Icon aria-hidden="true" className="icon" /></span><span className="case-area-number">{pad(index + 1)}</span></span><strong>{project.sections[index].heading}</strong><span className="case-area-jump">{ui.jumpTo}<ArrowDown aria-hidden="true" className="icon" /></span></a>; })}</nav>}
 
     <div className="case-layout">
       <aside className="case-sidebar"><p>{ui.inThis}</p><SectionNav label={content.a11y.caseNav} items={sidebar} /></aside>
       <div className="case-content">
         {project.sections.map((section, index) => {
           const highlighted = (project.slug === "saeiv" && (index === 2 || index === 4)) || (project.slug === "statlink" && index >= 3);
-          return <section id={`section-${index}`} className={`case-section ${highlighted ? "case-section--highlight" : ""}`} key={section.heading} aria-labelledby={`section-${index}-title`}>
+          return <section id={`section-${index}`} className={`case-section ${highlighted ? "case-section--highlight" : ""}`} key={section.heading} data-reveal aria-labelledby={`section-${index}-title`}>
             <div className="case-section-label">{pad(index + 1)}</div>
             <div><h2 id={`section-${index}-title`}>{section.heading}</h2><p>{section.body}</p>{section.bullets && <ul>{section.bullets.map(bullet => <li key={bullet}>{bullet}</li>)}</ul>}</div>
           </section>;
         })}
-        <section id="tech-stack" className="case-section" aria-labelledby="tech-stack-title">
+        <section id="tech-stack" className="case-section" data-reveal aria-labelledby="tech-stack-title">
           <div className="case-section-label">{pad(project.sections.length + 1)}</div>
           <div><h2 id="tech-stack-title">{ui.techStack}</h2><ul className="case-tags">{project.stack.map(item => <li key={item}>{item}</li>)}</ul></div>
         </section>
-        {project.github && <div className="source-panel"><span className="source-panel-icon"><GithubIcon /></span><div><p className="eyebrow">{ui.sourceTitle}</p><p>{ui.sourceNote}</p></div><a className="button button-primary" href={project.github} target="_blank" rel="noopener noreferrer">{ui.github} <ArrowIcon diagonal /></a></div>}
+        {project.github && <div className="source-panel" data-reveal><span className="source-panel-icon"><GithubIcon /></span><div><p className="eyebrow">{ui.sourceTitle}</p><p>{ui.sourceNote}</p></div><a className="button button-primary" href={project.github} target="_blank" rel="noopener noreferrer">{ui.github} <ArrowIcon diagonal /></a></div>}
       </div>
     </div>
 
-    <Link className="next-project" href={`/${locale}/projects/${next.slug}`}><div><p className="eyebrow"><span className="eyebrow-line" />{ui.next}</p><h2>{next.shortTitle}</h2><p>{next.summary}</p></div><span className="round-arrow" aria-hidden="true"><ArrowIcon /></span></Link>
+    <Link className="next-project" data-reveal href={`/${locale}/projects/${next.slug}`}><div><p className="eyebrow"><span className="eyebrow-line" />{ui.next}</p><h2>{next.shortTitle}</h2><p>{next.summary}</p></div><span className="round-arrow" aria-hidden="true"><ArrowIcon /></span></Link>
   </div></main>;
 }

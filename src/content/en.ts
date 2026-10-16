@@ -55,6 +55,26 @@ export const en = {
       ] },
     },
   },
+  theme: {
+    toggle: "Change color theme",
+    toLight: "Switch to light mode",
+    toDark: "Switch to dark mode",
+    light: "Light",
+    dark: "Dark"
+  },
+  engineering: {
+    eyebrow: "ARCHITECTURE IN PRACTICE",
+    title: "Follow the system.",
+    workbenchLabel: "Interactive architecture of selected projects",
+    projectTabs: "Choose a project architecture",
+    layerNavigation: "Inspect the architecture layers",
+    selectedLayer: "SELECTED LAYER",
+    diagramNote: "Illustrated data flow",
+    explore: "Explore the project",
+    pauseMotion: "Pause animations",
+    resumeMotion: "Resume animations",
+    reducedMotion: "Reduced motion enabled"
+  },
   portrait: { placeholder: "PORTRAIT / COMING SOON", placeholderAlt: "Portrait placeholder; professional photo coming soon", photoAlt: "Portrait of Ali Ghnainia" },
   notFound: { eyebrow: "404 / PAGE NOT FOUND", title: "Nothing at this address.", body: "The page may have moved. The work is still here.", action: "Return home" },
   a11y: { skip: "Skip to content", switchTo: "Switch to", caseNav: "Case study sections", breadcrumbs: "Breadcrumbs" },
