@@ -9,22 +9,29 @@ export const profile = {
 } as const;
 
 export type Project = {
-  slug: "saeiv" | "statlink" | "technical-chat";
+  slug: "saeiv" | "statlink" | "technical-chat" | "university-sso" | "e-story" | "devops-pipeline";
+  /** Featured work is production or public; academic projects come from the engineering program. */
+  kind: "featured" | "academic";
   number: string;
   title: string;
   shortTitle: string;
   category: string;
+  /** Short qualifier shown as a badge, e.g. "Academic team project". */
+  context?: string;
   summary: string;
   cardDescription: string;
   stack: string[];
   github?: string;
   facts: { value: string; label: string }[];
+  /** Ordered steps rendered as a rail on the case study page. */
+  journey?: { title: string; steps: string[] };
   sections: { heading: string; body: string; bullets?: string[] }[];
 };
 
 export const projects: Project[] = [
   {
     slug: "saeiv",
+    kind: "featured",
     number: "01",
     title: "SAEIV — Real-Time Transport Supervision Platform",
     shortTitle: "SAEIV",
@@ -49,6 +56,7 @@ export const projects: Project[] = [
   },
   {
     slug: "statlink",
+    kind: "featured",
     number: "02",
     title: "STATLINK — Analytics & Reporting Platform",
     shortTitle: "STATLINK",
@@ -68,6 +76,7 @@ export const projects: Project[] = [
   },
   {
     slug: "technical-chat",
+    kind: "featured",
     number: "03",
     title: "Technical Chat — Real-Time Messaging Application",
     shortTitle: "Technical Chat",
@@ -84,16 +93,93 @@ export const projects: Project[] = [
       { heading: "Engineering Details", body: "The backend uses layered controllers, services, repositories, DTOs and mappers with Lombok and MapStruct. The client uses TypeScript and Angular. CORS and request validation support the browser-facing API." },
     ],
   },
+  {
+    slug: "university-sso",
+    kind: "academic",
+    number: "04",
+    title: "University SSO — Campus Catering & Residence Platform",
+    shortTitle: "University SSO",
+    category: "Academic / Microservices",
+    context: "Academic team project",
+    summary: "A university platform where students, staff, professors and administrators sign in once through Keycloak to use catering, student residence, reservation, subscription and claims services.",
+    cardDescription: "Six Spring Boot microservices with Eureka discovery and OpenFeign, secured by Keycloak single sign-on and role mapping, with an Angular front end.",
+    stack: ["Java", "Spring Boot", "Spring Cloud", "Eureka", "OpenFeign", "Keycloak", "Spring Security", "JWT", "PostgreSQL", "Hibernate / JPA", "Angular", "OpenAPI / Swagger", "Stripe", "Twilio", "Thymeleaf", "Maven"],
+    facts: [
+      { value: "6", label: "Spring Boot microservices" },
+      { value: "7", label: "application roles" },
+      { value: "SSO", label: "one sign-in for every service" },
+    ],
+    journey: { title: "Keycloak single sign-on", steps: ["One Keycloak realm for the whole platform", "A dedicated Keycloak client per microservice", "Accounts managed through the Keycloak Admin Client", "Realm roles assigned to every user", "Role-based access in each service"] },
+    sections: [
+      { heading: "Problem", body: "Campus services such as catering, the student residence, reservations and claims were separate concerns, yet students, staff, professors and administrators needed one secure account to use all of them." },
+      { heading: "Architecture", body: "Each business domain runs as its own Spring Boot microservice registered with a Eureka discovery server. Services call each other through OpenFeign, persist data in PostgreSQL with JPA / Hibernate and document their REST APIs with OpenAPI / Swagger. An Angular application provides the interface.", bullets: ["Authentication: users, roles and Keycloak administration", "Catering: menus, meals and meal votes", "Residence: blocks and rooms", "Reservations: residence and restaurant bookings with Stripe payments", "Subscriptions: residence and restaurant subscriptions with QR codes", "Claims: attachments, a dashboard and SMS alerts through Twilio"] },
+      { heading: "Single Sign-On with Keycloak", body: "A dedicated Keycloak realm secures the whole platform. Every microservice is declared as its own Keycloak client with resource role mappings. The authentication service uses Spring Security and the Keycloak Admin Client to register accounts, update or delete them and assign realm roles, from administrators to students, staff and professors." },
+      { heading: "Features", body: "Users book residence rooms and restaurant meals, pay through a Stripe integration in test mode, receive PDF documents, QR codes and email notifications, and file claims with attachments that trigger SMS alerts." },
+      { heading: "Engineering Details", body: "Maven-built Spring Boot services with Lombok, Bean Validation, Thymeleaf and FreeMarker email templates, and Swagger UI to explore every API." },
+    ],
+  },
+  {
+    slug: "e-story",
+    kind: "academic",
+    number: "05",
+    title: "E-story — Reading & Learning Platform on Microservices",
+    shortTitle: "E-story",
+    category: "Academic / Microservices",
+    context: "Academic project",
+    summary: "A reading and learning platform split into Spring Boot microservices behind a Spring Cloud Gateway, with Keycloak authentication and one PostgreSQL database per service, all running in Docker Compose.",
+    cardDescription: "Spring Cloud Gateway, Eureka and Keycloak in front of five Spring Boot microservices, each with its own PostgreSQL database, orchestrated with Docker Compose.",
+    stack: ["Java", "Spring Boot", "Spring Cloud Gateway", "Eureka", "OpenFeign", "Keycloak", "Spring Security", "JWT", "PostgreSQL", "Hibernate / JPA", "Docker", "Docker Compose", "OpenAPI / Swagger", "Maven"],
+    facts: [
+      { value: "5", label: "business microservices" },
+      { value: "5", label: "PostgreSQL databases, one per service" },
+      { value: "13", label: "containers in Docker Compose" },
+    ],
+    journey: { title: "Request path", steps: ["Client request", "Spring Cloud Gateway routes it", "Keycloak secures access", "Eureka locates the service", "The service reads its own PostgreSQL database"] },
+    sections: [
+      { heading: "Problem", body: "E-story brings together book catalogues, private course requests, evaluations of submitted texts with their corrections, and user claims. Each area needed to evolve and be deployed independently." },
+      { heading: "Architecture", body: "A Spring Cloud Gateway is the single entry point and routes requests to services registered in Eureka. Each Spring Boot microservice owns its PostgreSQL database and calls the others through OpenFeign.", bullets: ["Authentication: users, roles, verification tokens and Keycloak integration", "Catalogues: book catalogues", "Private courses: course requests", "Evaluation: submitted texts and their corrections", "Claims: attachments and a dashboard"] },
+      { heading: "Security with Keycloak", body: "Keycloak runs in its own container with a dedicated realm. Each microservice is registered as a Keycloak client, and the authentication service combines Spring Security, JWT and the Keycloak Admin Client to manage accounts and roles." },
+      { heading: "Containerised Delivery", body: "Every service has its own Dockerfile. Docker Compose starts the full platform on a shared network: five PostgreSQL databases, the Eureka server, the gateway, Keycloak and the five business services, with startup dependencies and configuration passed through the environment." },
+      { heading: "Engineering Details", body: "Swagger / OpenAPI documentation on each service, Lombok, Bean Validation and a database-per-service model that keeps every domain independent." },
+    ],
+  },
+  {
+    slug: "devops-pipeline",
+    kind: "academic",
+    number: "06",
+    title: "DevOps CI/CD — Pipeline for a Spring Boot Stock Management API",
+    shortTitle: "DevOps CI/CD",
+    category: "Academic / DevOps",
+    context: "Academic project · ESPRIT",
+    summary: "A Spring Boot stock management API delivered through a Jenkins CI/CD pipeline: Maven build, unit tests, a Nexus artifact repository, a Docker image and a Docker Compose deployment.",
+    cardDescription: "A Jenkins pipeline that builds and tests a Spring Boot API with Maven, JUnit and Mockito, publishes it to Nexus and ships it as a Docker image.",
+    stack: ["Jenkins", "Git", "GitHub", "Maven", "JUnit", "Mockito", "Nexus", "Docker", "Docker Hub", "Docker Compose", "Java 11", "Spring Boot", "Spring Data JPA", "PostgreSQL", "Spring Boot Actuator", "OpenAPI / Swagger"],
+    facts: [],
+    journey: { title: "Jenkins pipeline", steps: ["Check out the code from GitHub", "Build and package with Maven", "Run JUnit 5 and Mockito unit tests", "Publish the artifact to Nexus", "Build the Docker image and push it to Docker Hub", "Deploy with Docker Compose and PostgreSQL"] },
+    sections: [
+      { heading: "Goal", body: "Automate the path from a code change to a running container for a Spring Boot application, with tests and versioned artifacts along the way." },
+      { heading: "The Application", body: "A layered Spring Boot 2.7 / Java 11 REST API for stock management: products, stock, suppliers, invoices and their details, operators and activity sectors, persisted in PostgreSQL with Spring Data JPA and documented with OpenAPI." },
+      { heading: "CI/CD with Jenkins", body: "A Jenkins pipeline orchestrates the delivery: it checks out the repository, builds the application with Maven, runs the unit tests, publishes the versioned artifact to a Nexus repository, then builds a Docker image and pushes it to Docker Hub." },
+      { heading: "Testing", body: "Service-layer unit tests use JUnit 5 and Mockito: repositories are mocked so the business logic is verified in isolation, with a dedicated test configuration." },
+      { heading: "Containerised Deployment", body: "Docker Compose runs the application image next to a PostgreSQL container with a persistent volume, a restart policy and configuration passed through the environment. Spring Boot Actuator exposes the health endpoint." },
+    ],
+  },
 ];
 
+export const featuredProjects = projects.filter(project => project.kind === "featured");
+
 export const skills = [
-  { label: "Backend", items: ["Java", "Spring Boot", "Spring Security", "Spring Cloud", "Hibernate / JPA", "REST APIs", "OpenFeign", "WebClient", "WebSocket", "JWT", "Camunda BPMN"] },
+  { label: "Backend", items: ["Java", "Spring Boot", "Spring Security", "Spring Cloud", "Microservices", "Hibernate / JPA", "REST APIs", "OpenFeign", "WebClient", "WebSocket", "JWT", "Keycloak", "Camunda BPMN"] },
   { label: "Event-driven", items: ["Apache Kafka", "Debezium", "Kafka Connect", "CDC"] },
   { label: "Frontend", items: ["Angular", "React", "TypeScript", "JavaScript", "RxJS", "ApexCharts"] },
   { label: "Data", items: ["PostgreSQL", "MySQL", "MongoDB", "Cube.js"] },
-  { label: "DevOps", items: ["Docker", "Docker Compose", "GitHub Actions", "GitLab CI/CD", "Maven", "Nginx", "Linux", "SonarQube"] },
+  { label: "DevOps", items: ["Docker", "Docker Compose", "Jenkins", "GitHub Actions", "GitLab CI/CD", "Maven", "Nexus", "Nginx", "Linux", "SonarQube"] },
   { label: "Testing & practices", items: ["JUnit", "Mockito", "Clean Code", "SOLID", "Code Review", "Agile / Scrum"] },
 ];
+
+/** Logos shown in the hero orbit and the scrolling stack band; every entry also appears in `skills`. */
+export const orbitStack = ["Java", "Spring Boot", "Apache Kafka", "Angular", "React", "Docker", "PostgreSQL", "Keycloak"];
+export const marqueeStack = ["Java", "Spring Boot", "Spring Security", "Apache Kafka", "Keycloak", "Angular", "React", "TypeScript", "PostgreSQL", "MongoDB", "Hibernate / JPA", "Docker", "Jenkins", "GitHub Actions", "Maven", "Nginx", "JUnit", "Camunda BPMN"];
 
 export const metrics = [
   { value: "8+", label: "Spring Boot microservices" },

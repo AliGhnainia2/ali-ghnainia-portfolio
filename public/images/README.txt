@@ -1,3 +1,2 @@
-Place Ali's original professional photo here as ali-profile.png (preferred) or ali-profile.jpg.
-Use a high-resolution portrait, roughly 4:5, with a neutral or dark background.
-Without a supplied portrait, the hero displays the interactive project architecture.
+Ali's professional portrait: ali-profile.png (1254 x 1254, square).
+It is shown as a round crop in the hero, so keep the face centred with some headroom.

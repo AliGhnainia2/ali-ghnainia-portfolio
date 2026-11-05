@@ -34,6 +34,26 @@ function subscribeMotion(onChange: () => void) {
 const getServerMotion = (): Motion => "running";
 const useMotion = () => useSyncExternalStore(subscribeMotion, getMotion, getServerMotion);
 
+// "22M+", "~42", "50%": the leading number counts up, the prefix and suffix stay fixed.
+const countPattern = /^(\D*)(\d+)(.*)$/;
+
+function countUp(element: HTMLElement, frames: Set<number>) {
+  const final = element.textContent ?? "";
+  const match = countPattern.exec(final);
+  if (!match) return;
+  const [, prefix, digits, suffix] = match;
+  const target = Number(digits);
+  const start = performance.now();
+  const step = (now: number) => {
+    const progress = Math.min(1, (now - start) / 1300);
+    const eased = 1 - (1 - progress) ** 3;
+    element.textContent = progress < 1 ? `${prefix}${Math.round(target * eased)}${suffix}` : final;
+    if (progress < 1) frames.add(requestAnimationFrame(step));
+  };
+  element.dataset.countupFinal = final;
+  frames.add(requestAnimationFrame(step));
+}
+
 export function SiteEffects() {
   const pathname = usePathname();
   const motion = useMotion();
@@ -90,13 +110,42 @@ export function SiteEffects() {
       entries.forEach(entry => { (entry.target as HTMLElement).dataset.inView = String(entry.isIntersecting); });
     }, { rootMargin: "80px 0px" });
     diagrams.forEach(element => diagramObserver.observe(element));
+    const counters = [...document.querySelectorAll<HTMLElement>("[data-countup]")];
+    const frames = new Set<number>();
+    const countObserver = new IntersectionObserver(entries => {
+      for (const entry of entries) if (entry.isIntersecting) {
+        countObserver.unobserve(entry.target);
+        countUp(entry.target as HTMLElement, frames);
+      }
+    }, { threshold: 0.6 });
+    counters.forEach(element => countObserver.observe(element));
     return () => {
       revealObserver.disconnect();
       diagramObserver.disconnect();
+      countObserver.disconnect();
+      frames.forEach(cancelAnimationFrame);
       reveals.forEach(element => { delete element.dataset.revealState; });
       diagrams.forEach(element => { delete element.dataset.inView; });
+      counters.forEach(element => {
+        if (element.dataset.countupFinal) element.textContent = element.dataset.countupFinal;
+        delete element.dataset.countupFinal;
+      });
     };
   }, [pathname, motion]);
+
+  // Cards marked with data-spotlight get a soft light that follows a fine pointer.
+  useEffect(() => {
+    if (motion !== "running" || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    const move = (event: PointerEvent) => {
+      const card = (event.target as Element | null)?.closest<HTMLElement>("[data-spotlight]");
+      if (!card) return;
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty("--spot-x", `${event.clientX - rect.left}px`);
+      card.style.setProperty("--spot-y", `${event.clientY - rect.top}px`);
+    };
+    document.addEventListener("pointermove", move, { passive: true });
+    return () => document.removeEventListener("pointermove", move);
+  }, [motion]);
 
   return <div className="site-progress" aria-hidden="true" />;
 }

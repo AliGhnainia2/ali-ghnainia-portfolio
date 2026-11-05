@@ -1,18 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { useId, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from "react";
 import { Layers3, Network } from "lucide-react";
 import type { Dictionary } from "@/content/en";
 import type { Locale } from "@/content/i18n";
 import type { Project } from "@/content/site";
-import { projectIcons, stageIcons } from "./locale-visuals";
+import { projectIcons } from "./project-icons";
 
 type ArchitectureProject = {
   slug: Project["slug"];
   title: string;
   category: string;
   stages: { role: string; name: string; short: string; detail: string }[];
+  /** One rendered logo or icon per stage, prepared on the server. */
+  marks: ReactNode[];
   foot: string;
 };
 
@@ -66,12 +68,11 @@ export function EngineeringWorkbench({ locale, projects, labels }: {
       <div className="workbench-project"><ProjectIcon aria-hidden="true" className="icon" /><span>{project.category}</span><span aria-hidden="true">{String(project.stages.length).padStart(2, "0")} <Layers3 className="icon" /></span></div>
       <ol className="workbench-flow" aria-label={labels.layerNavigation} style={{ "--workbench-stages": project.stages.length } as CSSProperties}>
         {project.stages.map((stage, index) => {
-          const Icon = stageIcons[project.slug][index];
           return <li key={`${project.slug}-${stage.name}`} className="workbench-stage" style={{ "--stage-index": index } as CSSProperties}>
             <span className="workbench-wire" aria-hidden="true" />
             <button type="button" className="workbench-node" aria-pressed={index === stageIndex}
               aria-controls={`${id}-inspector`} onClick={() => setStageIndex(index)}>
-              <span className="workbench-node-icon"><Icon aria-hidden="true" className="icon" /></span>
+              <span className="workbench-node-icon">{project.marks[index]}</span>
               <span className="workbench-node-copy"><span>{stage.role}</span><strong>{stage.name}</strong></span>
               <span className="workbench-node-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
             </button>

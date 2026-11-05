@@ -1,27 +1,27 @@
-import { existsSync } from "node:fs";
-import { join } from "node:path";
 import Image from "next/image";
-import { MapPin } from "lucide-react";
+import type { CSSProperties } from "react";
 import type { Dictionary } from "@/content/en";
+import { orbitStack } from "@/content/site";
+import { TechLogo } from "./tech-logo";
 
-const imageDirectory = join(process.cwd(), "public", "images");
-
+// The portrait sits inside an orbit of the main stack; the two badges repeat documented metrics.
 export function PortraitCard({ content }: { content: Dictionary }) {
-  const photoPath = existsSync(join(imageDirectory, "ali-profile.png"))
-    ? "/images/ali-profile.png"
-    : existsSync(join(imageDirectory, "ali-profile.jpg"))
-      ? "/images/ali-profile.jpg"
-      : null;
-
-  if (!photoPath) return null;
-
+  const [services, records] = content.metrics;
   return (
-    <figure className="portrait-card">
-      <div className="portrait-stage portrait-stage--photo">
-        <Image src={photoPath} alt={content.portrait.photoAlt} width={1122} height={1402} quality={100} sizes="(max-width: 560px) min(calc(100vw - 52px), 350px), (max-width: 800px) 420px, (max-width: 1180px) 36vw, 400px" unoptimized priority className="portrait-image" />
-        <span className="portrait-corners" aria-hidden="true" />
+    <figure className="portrait">
+      <div className="portrait-orbit" aria-hidden="true">
+        <span className="orbit-track" />
+        <span className="orbit-track orbit-track--inner" />
+        <ul className="orbit-ring" style={{ "--n": orbitStack.length } as CSSProperties}>
+          {orbitStack.map((name, index) => <li key={name} className="orbit-item" style={{ "--i": index } as CSSProperties}><span title={name}><TechLogo name={name} /></span></li>)}
+        </ul>
       </div>
-      <figcaption className="portrait-caption"><span><MapPin aria-hidden="true" className="icon" />{content.locationName}</span></figcaption>
+      <div className="portrait-halo" aria-hidden="true" />
+      <div className="portrait-photo">
+        <Image src="/images/ali-profile.png" alt={content.portrait.photoAlt} width={1254} height={1254} quality={100} sizes="(max-width: 560px) 70vw, (max-width: 1180px) 32vw, 330px" unoptimized priority className="portrait-image" />
+      </div>
+      <p className="portrait-badge portrait-badge--top" aria-hidden="true"><strong>{services.value}</strong><span>{services.label}</span></p>
+      <p className="portrait-badge portrait-badge--bottom" aria-hidden="true"><strong>{records.value}</strong><span>{records.label}</span></p>
     </figure>
   );
 }
